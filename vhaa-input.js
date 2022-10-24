@@ -118,10 +118,14 @@ export class VhaaInput extends LitElement {
     _lookForEnter(e) {
         const keycode = e.keyCode ? e.keyCode : e.which;
         if (keycode === 13) {
+            console.log(e);
             this.dispatchEvent(new CustomEvent("enter-pressed"));
         }
     }
 
+    /**
+     * Private method to set value with input
+     */
     _input({ target: { value } }) {
         this.value = value;
     }

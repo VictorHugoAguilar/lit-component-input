@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" />
+
+        <title>VHAA - Component Input Test</title>
+
+        <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+        <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+
+        <script type="module" src="../index.js"></script>
+    </head>
+    <body>
+        <test-fixture id="BasicTestFixture">
+            <template>
+                <vhaa-input></vhaa-input>
+            </template>
+        </test-fixture>
+
+        <script type="module">
+            import "../index.js";
+
+            suite("create element vhaa-input", () => {
+                let myEle;
+
+                setup(() => {
+                    myEle = fixture("BasicTestFixture");
+                });
+
+                suite("when add a element without label", () => {
+                    test("then show a input element without label", (done) => {
+                        flush(() => {
+                            const elementShadowRoot = myEle.shadowRoot;
+                            const elementHeader = elementShadowRoot.querySelector("label");
+                            expect(elementHeader).to.be.null;
+                            done();
+                        });
+                    });
+                });
+
+                suite("when add a element with label", () => {
+                    test("then show a input element with label", (done) => {
+                        myEle.label = "label for test";
+                        flush(() => {
+                            const elementShadowRoot = myEle.shadowRoot;
+                            const elementHeader = elementShadowRoot.querySelector("label");
+                            expect(elementHeader.innerHTML).to.be.not.null;
+                            done();
+                        });
+                    });
+                });
+
+                suite("when add a element button", () => {
+                    test("then press enter an event is raised", (done) => {
+                        const callback = sinon.spy();
+                        myEle.addEventListener("enter-pressed", callback);
+                        flush(() => {
+                            const elementShadowRoot = myEle.shadowRoot;
+                            const elementHeader = elementShadowRoot.querySelector("input");
+                            const pressEnter = new KeyboardEvent("keypress", {
+                                bubbles: true,
+                                cancelable: true,
+                                code: "Enter",
+                                key: "Enter",
+                                keyCode: 13,
+                            });
+                            elementHeader.dispatchEvent(pressEnter);
+                            expect(callback).called;
+                            done();
+                        });
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
